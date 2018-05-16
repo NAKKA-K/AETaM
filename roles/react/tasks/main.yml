@@ -1,0 +1,4 @@
+---
+- name: install react
+  command: npm install -g create-react-app
+
