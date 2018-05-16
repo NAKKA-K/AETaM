@@ -1,0 +1,9 @@
+- hosts: all
+  become: True
+  role:
+  - default
+  - nginx
+  - n
+  - react
+  - python
+
