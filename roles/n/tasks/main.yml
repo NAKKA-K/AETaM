@@ -1,17 +1,15 @@
 ---
-- name: exist n?
-  command: n --version
-  register: exist-n
-
-- name: clone github.com/tj/n
-  command: git clone https://github.com/tj/n.git /tmp/n
-  when: exist-n is changed
+- git:
+    repo: https://github.com/tj/n.git
+    dest: /tmp/n
+    update: False
+  register: n
 
 - name: n make install
-  command: cd /tmp/n/ && sudo make install
-  when: exist-n is changed
+  shell: cd /tmp/n/ && sudo make install && cd -
+  when: n is changed
 
 - name: install n(latest node & npm)
   command: sudo n stable
-  when: exist-n is changed
+  when: n is changed
 
