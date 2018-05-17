@@ -1,4 +1,6 @@
 ---
 - name: install react
-  command: npm install -g create-react-app
+  npm:
+    name: create-react-app
+    global: True
 
