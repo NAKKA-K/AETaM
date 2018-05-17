@@ -2,10 +2,11 @@
 - name: install nginx
   apt:
     name: nginx
-    update_cache: True
+  register: nginx
 
 - name: enable nginx
   service:
     name: nginx
     enabled: True
     state: started
+  when: nginx is changed
