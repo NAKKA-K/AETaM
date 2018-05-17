@@ -1,13 +1,19 @@
 ---
 - name: install default package
-  apt: name="{{item}}" state=present update_cache=True
+  apt:
+    name: "{{ item }}"
+    state: present
   with_items:
-  - git
-  - vim
-  - tree
+    - git
+    - vim
+    - tree
 
-- name: setting locale
-  comand: |
-    locale_gen ja_JP.UTF-8;
-    localectl set-locale LANG=ja_JP.UTF-8;
+- name: create locale ja_JP.UTF-8
+  locale_gen:
+    name: ja_JP.UTF-8
+  register: locale
+
+- name: change locale
+  command: update-locale LANG=ja_JP.UTF-8;
+  when: locale is changed
 
