@@ -1,31 +1,42 @@
 ---
-- name: clone pyenv installer
+- git:
+    repo: https://github.com/yyuu/pyenv.git
+    dest: /home/{{ ansible_ssh_user }}/.pyenv
+    update: False
+  register: pyenv
+  become: True
+
+- name: settings pyenv
   shell: |
-    git clone https://github.com/yyuu/pyenv.git ~/.pyenv
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
-    echo 'export PATH="${PYENV_ROOT}/bin:$PATH"' >> ~/.bash_profile
-    echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> /home/{{ ansible_ssh_user }}/.bashrc
+    echo 'export PATH="${PYENV_ROOT}/bin:$PATH"' >> /home/{{ ansible_ssh_user }}/.bashrc
+    echo 'eval "$(pyenv init -)"' >> /home/{{ ansible_ssh_user }}/.bashrc
+  when: pyenv is changed
 
 - name: install python depend package
-  apt: name="{{item}}" state=present update_cache=True
+  apt: 
+    name: "{{item}}"
+    state: present
   with_items:
     - libssl-dev 
     - libbz2-dev 
     - libreadline-dev
     - libsqlite3-dev
 
-- name: source bash_profile
-  command: source ~/.bash_profile
+- name: source python
+  shell: bash -lc "sudo /home/vagrant/.pyenv/bin/pyenv install 3.6.4 && sudo /home/vagrant/.pyenv/bin/pyenv global 3.6.4"
+  become_user: vagrant
+  when: pyenv is changed
 
-- name: install python
-  command: pyenv install 3.6.4
-
-- name: enable python
-  command: pyenv global 3.6.4
-
+- set_fact: ansible_python_interpreter=/home/vagrant/.pyenv/shims/python
 
 - name: pip install opencv
-  command: pip install opencv-pythona matplotlib
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - opencv-python
+    - matplotlib
 
-- namne: pip install flask
-  command: pip install Flask
+- name: pip install flask
+  pip:
+    name: Flask
