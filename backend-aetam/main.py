@@ -1,10 +1,5 @@
 from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return 'Hello, world!'
+from aetam import app
 
 if __name__ == '__main__':
     host = '0.0.0.0'
