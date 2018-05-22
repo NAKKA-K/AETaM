@@ -8,3 +8,5 @@ help:
 run:
 	python main.py
 
+test:
+	python -m unittest discover -s aetam/tests
