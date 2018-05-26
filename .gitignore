@@ -61,7 +61,6 @@ instance/
 
 # Scrapy stuff:
 .scrapy
-
 # Sphinx documentation
 docs/_build/
 
@@ -349,5 +348,7 @@ bh_unicode_properties.cache
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
 
+
+*.sqlite3
 .vscode/
 .vagrant/
