@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help run test db/init
+.PHONY: help run test migrate
 
 help:
 	@cat Makefile
