@@ -10,7 +10,7 @@ install:
     - cd frontend-aetam && make install
 
 cache:
-    - pip
+    pip: true
     directories:
         - node_modules
 
