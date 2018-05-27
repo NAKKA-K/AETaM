@@ -1,6 +1,8 @@
 # AETaM(いーたん)
 毎日の食事、会話によって、性格や体型、体調が変化する成長型AIです  
 
+[![Build Status](https://travis-ci.org/NAKKA-K/AETaM.svg?branch=master)](https://travis-ci.org/NAKKA-K/AETaM)
+
 # Description
 毎日の食事、会話によって、性格や体型、体調が変化する成長型AIです。   
 AETaMへの食事は、自分の食事画像をあげましょう。  
