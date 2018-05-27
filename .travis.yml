@@ -7,7 +7,7 @@ node_js:
 
 install:
     - pip install --user -r backend-aetam/requirements.txt
-    - cd frontend-aetam && make install
+    - cd frontend-aetam && make install && cd -
 
 cache:
     pip: true
