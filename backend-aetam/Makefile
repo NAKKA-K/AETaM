@@ -9,7 +9,7 @@ run:
 	python manage.py runserver
 
 test:
-	python -m unittest discover -s aetam/tests
+	python -Wall -m unittest discover -s aetam/tests
 
 migrate:
 	python manage.py migrate
