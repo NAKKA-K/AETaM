@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help run build clean
+.PHONY: help run build install test clean
 
 help:
 	@cat Makefile
@@ -10,6 +10,12 @@ run:
 
 build:
 	npm build
+
+install:
+	npm install
+
+test:
+	npm test
 
 clean:
 	rm -rf build

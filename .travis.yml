@@ -1,0 +1,19 @@
+language: python, node_js
+python:
+    - 3.6
+
+node_js:
+    - 10
+
+install:
+    - cd backend-aetam && make install
+    - cd frontend-aetam && make install
+
+cache:
+    - pip
+    directories:
+        - node_modules
+
+script:
+    - cd backend-aetam && make test && cd -
+    - cd frontend-aetam && make test && cd -
