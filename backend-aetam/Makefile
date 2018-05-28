@@ -1,18 +1,28 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install run test migrate
+.PHONY: help install run test migrate clean
 
-help:
+PYTHON   = python
+PIP      = pip
+MANAGE   = manage.py
+DATABASE = aetam.sqlite3
+
+
+help: Makefile
 	@cat Makefile
 
 install:
-	pip install -r requirements.txt
+	$(PIP) install -r requirements.txt
 
-run:
-	python manage.py runserver
+run: $(DATABASE)
+	$(PYTHON) $(MANAGE) runserver
 
 test:
-	python -Wall -m unittest discover -s aetam/tests
+	$(PYTHON) -Wall -m unittest discover -s aetam/tests
 
-migrate:
-	python manage.py migrate
+migrate: $(DATABASE)
+$(DATABASE):
+	$(PYTHON) $(MANAGE) migrate
+
+clean:
+	-@rm $(DATABASE)
