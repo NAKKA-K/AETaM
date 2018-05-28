@@ -25,4 +25,4 @@ $(DATABASE):
 	$(PYTHON) $(MANAGE) migrate
 
 clean:
-	-rm $(DATABASE)
+	-@rm $(DATABASE)
