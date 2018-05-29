@@ -18,7 +18,7 @@ run: $(DATABASE)
 	$(PYTHON) $(MANAGE) runserver
 
 test:
-	-$(PYTHON) -Wall -m unittest discover -s aetam/tests
+	$(PYTHON) -Wall -m unittest discover -s aetam/tests
 
 migrate: $(DATABASE)
 $(DATABASE):
