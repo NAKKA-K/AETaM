@@ -1,7 +1,7 @@
-from flask import Flask
 from flask.views import MethodView
+from flask import render_template
 
 class IndexView(MethodView):
     def get(self):
-        return 'Hello, world!'
+        return render_template('index.html')
 
