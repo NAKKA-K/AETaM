@@ -15,3 +15,4 @@ class DevelopConfig(Config):
     DEBUG = True
     TESTING = True
     TEMPLATES_AUTO_RELOAD = True
+    SECRET_KEY = 'This key is testing key.'
