@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from aetam import app
 import unittest
 from flask import json
