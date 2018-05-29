@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask.views import MethodView
 from flask import render_template
 from flask import redirect
