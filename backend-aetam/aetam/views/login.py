@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from flask.views import MethodView
 from flask import render_template
 from flask import redirect
@@ -35,7 +34,7 @@ class LoginView(MethodView):
                 response=json.dumps(data),
                 mimetype='application/json'
             )
-        else: # TODO: 開発テスト段階が終われば削除する
+        else: # TODO: When delelopment is completed, remove the implementation
             if request.form['username'] == "":
                 error = 'Invalid username'
             elif request.form['password'] == "":

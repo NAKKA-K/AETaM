@@ -6,7 +6,7 @@ class TestLogin(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
-    # TODO: 開発時のテスト用にAPI以外の形式で操作できるようにしている
+    # TODO: When development is completed, remove the implementation
     def test_post_login(self):
         response = self.app.post('/login',data={
             'username': 'name',
