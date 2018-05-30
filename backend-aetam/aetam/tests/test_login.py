@@ -20,7 +20,7 @@ class TestLogin(unittest.TestCase):
             'password': 'pass'
         })
         self.assertEqual(200, response.status_code)
-        self.assertEqual('Logged in!', response.get_json()['message'])
+        self.assertEqual([], response.get_json()['errors'])
 
     def test_api_post_login_failed(self):
         response = self.api_post_login({
@@ -28,7 +28,7 @@ class TestLogin(unittest.TestCase):
             'password': ''
         })
         self.assertEqual(400, response.status_code)
-        self.assertEqual('Invalid username', response.get_json()['error'])
+        self.assertIn('Invalid username', response.get_json()['errors'])
 
     def api_post_login(self, data):
         return self.app.post('/login',
