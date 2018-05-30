@@ -3,24 +3,20 @@ import cv2, matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 
-#画像は横向きで、お皿全体が写るようにする
 class IpAETaM:
-    dump = []   
+    dump = []
     def __init__(self, cups):#引数は画像データ
         self.cups = cups
         self.width = 600
         self.height = 400
-        self.fuga()
+        self.ColorProcess()
 
-    def fuga(self):#料理色処理
-        circles, cups_circles = self.__hoge()
-        blue, green, red = 0, 0, 0
-        bc, gc, rc, cc = 0, 0, 0, 0
-        maxcolor = [0, 0]
+    def ColorProcess(self):#料理色処理
+        circles, cups_circles = self.__ImageProcess()
+        blue, green, red, bc, gc, rc, cc, maxcolor = 0, 0, 0, 0, 0, 0, 0, [0, 0]
         if circles is not None and len(circles) > 0:
             circles = circles[0]
             cups_color = [cups_circles] * circles.shape[0]
-            cc = 0
             for (x, y, r) in circles:#料理検出
                 x, y, r = int(x), int(y), int(r)
                 yy, xx = np.ogrid[0:self.height, 0:self.width]
@@ -33,9 +29,8 @@ class IpAETaM:
             for cc in range(1, circles.shape[0]):#料理色抽出
                 matrix = (matrix == True) & (cups_color[cc] == 0)
             cups_circles[matrix] = 0
-            plt.imshow(cv2.cvtColor(cups_circles, cv2.COLOR_BGR2RGB))
-            for y in range(0, self.height):#色取得
-                for x in range(0, self.width):
+            for x in range(0, self.width):#色取得
+                for y in range(0, self.height):
                     if (cups_circles[y, x, 0] != 0) & (cups_circles[y, x, 1] != 0) & (cups_circles[y, x, 2] != 0):
                         if (cups_circles[y, x, 0] >= cups_circles[y, x, 1]) & (cups_circles[y, x, 0] >= cups_circles[y, x, 2]):
                             blue += cups_circles[y, x, 0]
@@ -48,21 +43,17 @@ class IpAETaM:
                             rc += 1
             blue, green, red = blue // bc, green // gc, red // rc#色平均
             if green > blue:
-                maxcolor[0] = green
-                maxcolor[1] = -1
+                maxcolor = [green, -1]
             else:
                 maxcolor[0] = blue
             if red > maxcolor[0]:
                 maxcolor[1] = 1
-            print('blue',blue,'green',green,'red',red)
-            print('stats', maxcolor[1])
             self.dump.append(maxcolor[1])
-            #return maxcolor[1]
         
         elif not circles:
             print('円を検出できませんでした')
 
-    def __hoge(self):#画像加工
+    def __ImageProcess(self):#画像加工
         self.cups = cv2.resize(self.cups,(self.width, self.height), interpolation = cv2.INTER_LANCZOS4)#リサイズ
         cups_preprocessed  = cv2.cvtColor(cv2.GaussianBlur(self.cups, (5, 5), 0), cv2.COLOR_BGR2GRAY)#加重平均グレスケ
         cups_edges = cv2.Canny(cups_preprocessed, threshold1=80, threshold2=80)#エッジ
