@@ -14,16 +14,15 @@ class LoginView(MethodView):
         return render_template('login.html')
 
     def post(self):
-        error = None
         if request.headers['Content-Type'] == 'application/json':
-            data = {}
+            data = {"errors": []}
             if request.json['username'] == "":
-                data['error'] = 'Invalid username'
-            elif request.json['password'] == "":
-                data['error'] = 'Invalid password'
-            else:
+                data['errors'].append('Invalid username')
+            if request.json['password'] == "":
+                data['errors'].append('Invalid password')
+
+            if data['errors'] == []:
                 session['logged_in'] = True
-                data['message'] = "Logged in!"
                 return Response(
                     status=200,
                     response=json.dumps(data),
