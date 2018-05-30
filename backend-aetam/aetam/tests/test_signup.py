@@ -10,9 +10,13 @@ class TestLogin(unittest.TestCase):
     def setUpClass(cls):
         cls.set_test_db()
 
+    @classmethod
+    def set_test_db(cls):
+        app.config['DATABASE'] = os.path.join(app.config['BASE_DIR'], 'test.sqlite3')
+
     def setUp(self):
         self.app = app.test_client()
-        self.create_test_db()
+        util_db.init()
 
     def tearDown(self):
         self.truncate_test_db_table()
@@ -23,26 +27,20 @@ class TestLogin(unittest.TestCase):
             'password': 'pass'
         })
         self.assertEqual(200, response.status_code)
-        self.assertEqual([], response.get_json()['errors'])
-        #self.assertEqual(2, len(response.get_json()['user']))
-        #self.assertEqual('name', response.get_json()['user']['name'])
-        #self.assertEqual(7, len(response.get_json()['status']))
+        res_json = response.get_json()
+        # is valid response data?
+        if res_json['errors'] != [] or len(res_json['user']) != 2 or len(res_json['status']) != 7:
+            self.fail()
+        self.assertEqual('name', res_json['user']['name'])
 
     def api_post_signup(self, data):
-        return self.app.post('/signup',
-                data=json.dumps(data),
-                content_type='application/json')
+        return self.app.post(
+            '/signup',
+            data=json.dumps(data),
+            content_type='application/json'
+        )
 
     def truncate_test_db_table(self):
         with util_db.connect() as db:
-            cur = db.execute('select * from users')
-            for line in cur.fetchall():
-                print(line[0])
-
-    @classmethod
-    def set_test_db(cls):
-        app.config['DATABASE'] = os.path.join(app.config['BASE_DIR'], 'test.sqlite3')
-
-    def create_test_db(self):
-        util_db.init()
-
+            db.execute('delete from users')
+            db.execute('delete from statuses')
