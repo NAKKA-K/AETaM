@@ -9,6 +9,7 @@ class TestResponseGet(unittest.TestCase):
         response = self.app.get('/')
         self.assertEqual(200, response.status_code)
 
+    def test_get_login_page(self):
+        response = self.app.get('/login')
+        self.assertEqual(200, response.status_code)
 
-if __name__ == "__main__":
-    unittest.main()
