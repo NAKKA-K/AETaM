@@ -6,14 +6,6 @@ class TestLogin(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
-    # TODO: When development is completed, remove the implementation
-    def test_post_login(self):
-        response = self.app.post('/login',data={
-            'username': 'name',
-            'password': 'pass'
-        }, follow_redirects=True)
-        self.assertEqual(200, response.status_code)
-
     def test_api_post_login(self):
         response = self.api_post_login({
             'username': 'name',
