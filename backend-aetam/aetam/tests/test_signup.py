@@ -13,10 +13,10 @@ class TestLogin(unittest.TestCase):
     @classmethod
     def set_test_db(cls):
         app.config['DATABASE'] = os.path.join(app.config['BASE_DIR'], 'test.sqlite3')
+        util_db.init()
 
     def setUp(self):
         self.app = app.test_client()
-        util_db.init()
 
     def tearDown(self):
         self.truncate_test_db_table()
