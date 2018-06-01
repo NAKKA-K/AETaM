@@ -11,7 +11,6 @@ class LoginView(MethodView):
         data = {"errors": []}
         if request.headers['Content-Type'] != 'application/json':
             abort(406)
-            return
 
         if request.json['username'] == "":
             data['errors'].append('Invalid username')
