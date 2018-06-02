@@ -30,3 +30,4 @@ class TestLogin(unittest.TestCase):
     def test_api_post_logout(self):
         response = self.app.post('/logout')
         self.assertEqual(200, response.status_code)
+        self.assertEqual([], response.get_json()['errors'])
