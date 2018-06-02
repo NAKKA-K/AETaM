@@ -3,14 +3,14 @@ from flask import request
 from flask import session
 from flask import Response
 from flask import json
+from flask import jsonify
 from flask import abort
-
+from aetam.views.util import content_type
 
 class LoginView(MethodView):
+    @content_type('application/json')
     def post(self):
         data = {"errors": []}
-        if request.headers['Content-Type'] != 'application/json':
-            abort(406)
 
         if request.json['username'] == "":
             data['errors'].append('Invalid username')
@@ -18,15 +18,6 @@ class LoginView(MethodView):
             data['errors'].append('Invalid password')
         if data['errors'] == []:
             session['logged_in'] = True
-            return Response(
-                status=200,
-                response=json.dumps(data),
-                mimetype='application/json'
-            )
+            return jsonify(data)
 
-        return Response(
-            status=400,
-            response=json.dumps(data),
-            mimetype='application/json'
-        )
-
+        return jsonify(data), 400
