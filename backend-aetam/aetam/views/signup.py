@@ -11,7 +11,7 @@ from aetam.models import Status
 from aetam.views.util import content_type
 
 class SignUpView(MethodView):
-    @contetn_type('application/json')
+    @content_type('application/json')
     def post(self):
         data = {"errors": []}
         if request.json['username'] == "":
