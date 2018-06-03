@@ -10,6 +10,18 @@ class User(object):
         user = db.execute('select id, name from users where id=(?)', [user_id]).fetchone()
         return cls.convert_dic(user)
 
+    @classmethod
+    def is_valid_username(cls, username):
+        if username != '':
+            return True
+        return False
+
+    @classmethod
+    def is_valid_password(cls, password):
+        if password != '':
+            return True
+        return False
+
     def insert_to(self, db):
         cursor = db.cursor()
         cursor.execute('insert into users (name, password) values (?, ?)', [self.username, self.password])
