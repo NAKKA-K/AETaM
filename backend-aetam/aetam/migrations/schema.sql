@@ -2,7 +2,8 @@ drop table if exists Users;
 create table Users (
     id integer primary key autoincrement,
     name varchar(16) not null,
-    password varchar(16) not null
+    password varchar(16) not null,
+    access_key varchar(32) not null
 );
 
 drop table if exists Statuses;
