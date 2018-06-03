@@ -20,7 +20,7 @@ class Status(object):
         cursor = db.cursor()
         cursor.execute('insert into statuses values (?, ?, ?, ?, ?, ?, ?)', [self.user_id, "charname", 0, 0, 0, 0, 0])
         db.commit()
-        return self.user_id
+        return self.select_from(db, self.user_id)
 
     def __init__(self, user_id, name, obesity, serious, hot, strong, kind):
         self.user_id = user_id
