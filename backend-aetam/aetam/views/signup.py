@@ -1,6 +1,5 @@
 from flask.views import MethodView
 from flask import request
-from flask import json
 from flask import jsonify
 from flask import g
 from aetam.models import User
@@ -19,13 +18,7 @@ class SignUpView(MethodView):
         if data['errors']:
             return jsonify(data), 400
 
-        user_id = self.insert_user(request.json['username'], request.json['password'])
-        data['status'] = Status.select_from(g.db, user_id)
-        data['user'] = User.select_from(g.db, user_id)
+        data['user'] = User(request.json['username'], request.json['password']).insert_to(g.db)
+        data['status'] = Status(data['user']['id'], "charname", 0, 0, 0, 0, 0).insert_to(g.db)
         return jsonify(data), 200
-
-    def insert_user(self, username, password):
-        user_id = User(username, password).insert_to(g.db)
-        Status(user_id, "charname", 0, 0, 0, 0, 0).insert_to(g.db)
-        return user_id
 
