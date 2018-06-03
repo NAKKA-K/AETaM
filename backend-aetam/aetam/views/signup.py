@@ -14,17 +14,18 @@ class SignUpView(MethodView):
     @content_type('application/json')
     def post(self):
         data = {"errors": []}
-        if request.json['username'] == "":
+        if not User.is_valid_username(request.json['username']):
             data['errors'].append('Invalid username')
-        if request.json['password'] == "":
+        if not User.is_valid_password(request.json['password']):
             data['errors'].append('Invalid password')
 
-        if data['errors'] == []:
-            user_id = self.insert_user(request.json['username'], request.json['password'])
-            data['status'] = Status.select_from(g.db, user_id)
-            data['user'] = User.select_from(g.db, user_id)
-            return jsonify(data), 200
-        return jsonify(data), 400
+        if data['errors']:
+            return jsonify(data), 400
+
+        user_id = self.insert_user(request.json['username'], request.json['password'])
+        data['status'] = Status.select_from(g.db, user_id)
+        data['user'] = User.select_from(g.db, user_id)
+        return jsonify(data), 200
 
     def insert_user(self, username, password):
         pass_sha = self.SHA256_pass(password)
