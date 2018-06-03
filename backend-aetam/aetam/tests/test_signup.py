@@ -24,7 +24,7 @@ class TestLogin(unittest.TestCase):
     def test_api_post_signup(self):
         response = self.api_post_signup({
             'username': 'name',
-            'password': 'pass'
+            'password': 'password'
         })
         self.assertEqual(200, response.status_code)
         res_json = response.get_json()
@@ -33,12 +33,36 @@ class TestLogin(unittest.TestCase):
             self.fail()
         self.assertEqual('name', res_json['user']['name'])
 
+    def test_api_signup_table(self):
+        posts = [
+            ['name', 'password'],
+            ['0123456789ABCDEF', 'password12345678'],
+        ]
+        self.api_post_signup_table(posts, 200)
+
+    def test_api_signup_table_faild(self):
+        posts = [
+            ['0123456789ABCDEF0', 'password12345678'],
+            ['0123456789ABCDEF', 'password123456789'],
+        ]
+        self.api_post_signup_table(posts, 400)
+
     def api_post_signup(self, data):
         return self.app.post(
             '/signup',
             data=json.dumps(data),
             content_type='application/json'
         )
+
+    def api_post_signup_table(self, posts, status_code):
+        for post in posts:
+            self.assertEqual(
+                status_code,
+                self.api_post_signup({
+                    'username': post[0],
+                    'password': post[1]
+                }).status_code
+            )
 
     def truncate_test_db_table(self):
         with util_db.connect() as db:
