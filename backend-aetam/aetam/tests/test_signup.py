@@ -36,16 +36,33 @@ class TestLogin(unittest.TestCase):
     def test_api_signup_table(self):
         posts = [
             ['name', 'password'],
-            ['0123456789ABCDEF', 'password12345678'],
+            ['0123456789ABCDEF', 'password12345678']
         ]
         self.api_post_signup_table(posts, 200)
 
     def test_api_signup_table_faild(self):
         posts = [
             ['0123456789ABCDEF0', 'password12345678'],
-            ['0123456789ABCDEF', 'password123456789'],
+            ['0123456789ABCDEF1', 'pass']
         ]
         self.api_post_signup_table(posts, 400)
+
+    def test_api_signup_exists_user(self):
+        self.assertEqual(
+            200,
+            self.api_post_signup({
+                'username': 'name',
+                'password': 'password'
+            }).status_code
+        )
+        self.assertEqual(
+            409,
+            self.api_post_signup({
+                'username': 'name',
+                'password': 'password'
+            }).status_code
+        )
+
 
     def api_post_signup(self, data):
         return self.app.post(
