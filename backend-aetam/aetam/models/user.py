@@ -30,6 +30,16 @@ class User(object):
             return True
         return False
 
+    @classmethod
+    def is_exists_user(cls, db, username):
+        cursor = db.cursor()
+        data = cursor.execute(
+                'select * from Users where name=(?) limit 1',
+                [username]).fetchone()
+        if data:
+            return True
+        return False
+
     def insert_to(self, db):
         cursor = db.cursor()
         access_key = secrets.token_hex(16)
