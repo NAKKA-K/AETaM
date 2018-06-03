@@ -29,7 +29,7 @@ class TestLogin(unittest.TestCase):
         self.assertEqual(200, response.status_code)
         res_json = response.get_json()
         # is valid response data?
-        if res_json['errors'] != [] or len(res_json['user']) != 2 or len(res_json['status']) != 7:
+        if res_json['errors'] != [] or len(res_json['user']) != 3 or len(res_json['status']) != 7:
             self.fail()
         self.assertEqual('name', res_json['user']['name'])
 
