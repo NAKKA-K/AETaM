@@ -1,6 +1,6 @@
 from aetam import app
 import re
-import secrets
+import os
 
 class User(object):
     @classmethod
@@ -42,7 +42,8 @@ class User(object):
 
     def insert_to(self, db):
         cursor = db.cursor()
-        access_key = secrets.token_hex(16)
+        #access_key = secrets.token_hex(16)
+        access_key = os.urandom(16).hex()
         cursor.execute(
             'insert into Users (name, password, access_key) values (?, ?, ?)',
             [self.username, self.password, access_key]
