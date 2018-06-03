@@ -1,17 +1,19 @@
 from aetam import app
 import re
+import secrets
 
 class User(object):
     @classmethod
     def convert_dic(cls, user_array):
         return dict(
             id=user_array[0],
-            name=user_array[1]
+            name=user_array[1],
+            access_key=user_array[2]
         )
 
     @classmethod
-    def select_from(cls, db, user_id):
-        user = db.execute('select id, name from users where id=(?)', [user_id]).fetchone()
+    def select_from(cls, db, access_key):
+        user = db.execute('select id, name, access_key from Users where access_key=(?)', [access_key]).fetchone()
         return cls.convert_dic(user)
 
     @classmethod
@@ -30,9 +32,13 @@ class User(object):
 
     def insert_to(self, db):
         cursor = db.cursor()
-        cursor.execute('insert into users (name, password) values (?, ?)', [self.username, self.password])
+        access_key = secrets.token_hex(16)
+        cursor.execute(
+            'insert into Users (name, password, access_key) values (?, ?, ?)',
+            [self.username, self.password, access_key]
+        )
         db.commit()
-        return cursor.lastrowid
+        return self.select_from(db, access_key)
 
     # TODO: sha256
     def SHA256_pass(self, password):
