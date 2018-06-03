@@ -18,6 +18,10 @@ class SignUpView(MethodView):
         if data['errors']:
             return jsonify(data), 400
 
+        if User.is_exists_user(g.db, request.json['username']):
+            data['errors'].append('Exist username')
+            return jsonify(data), 409
+
         data['user'] = User(request.json['username'], request.json['password']).insert_to(g.db)
         data['status'] = Status(data['user']['id'], "charname", 0, 0, 0, 0, 0).insert_to(g.db)
         return jsonify(data), 200
