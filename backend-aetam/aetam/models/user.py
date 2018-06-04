@@ -38,13 +38,21 @@ class User(object):
         data = cursor.execute(
             'select * from Users where name=(?) limit 1',
             [username]).fetchone()
-        return data
+        if not data:
+            return None
+        return dict(
+            id=data[0],
+            name=data[1],
+            password=data[2],
+            access_key=data[3],
+        )
 
+    # HACK: Change method name to is_auth_user
     @classmethod
     def is_exists_user_row(cls, db, username, password):
         cursor = db.cursor()
         data = cls.get_exists_user(db, username)
-        if data and sha256_pass(password) == data['password']:
+        if data and cls.sha256_pass(password) == data['password']:
             return True
         return False
 
