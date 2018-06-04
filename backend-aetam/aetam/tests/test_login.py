@@ -1,8 +1,19 @@
 from aetam import app
 import unittest
 from flask import json
+import os
+from aetam.models import util_db
 
 class TestLogin(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.set_test_db()
+
+    @classmethod
+    def set_test_db(cls):
+        app.config['DATABASE'] = os.path.join(app.config['BASE_DIR'], 'test.sqlite3')
+        util_db.init()
+
     def setUp(self):
         self.app = app.test_client()
 
