@@ -2,6 +2,7 @@ from aetam import app
 import re
 import os
 import base64
+import hashlib
 
 class User(object):
     @classmethod
@@ -32,14 +33,25 @@ class User(object):
         return False
 
     @classmethod
-    def is_exists_user(cls, db, username):
+    def get_exists_user(cls, db, username):
         cursor = db.cursor()
         data = cursor.execute(
-                'select * from Users where name=(?) limit 1',
-                [username]).fetchone()
-        if data:
+            'select * from Users where name=(?) limit 1',
+            [username]).fetchone()
+        return data
+
+    @classmethod
+    def is_exists_user_row(cls, db, username, password):
+        cursor = db.cursor()
+        data = cls.get_exists_user(db, username)
+        if data and sha256_pass(password) == data['password']:
             return True
         return False
+
+    @classmethod
+    def sha256_pass(cls, password):
+        hashing = password + app.config['SECRET_KEY']
+        return hashlib.sha256(hashing.encode('utf-8')).hexdigest()
 
     def insert_to(self, db):
         """
@@ -56,11 +68,7 @@ class User(object):
         db.commit()
         return self.select_from(db, access_key)
 
-    # TODO: sha256
-    def SHA256_pass(self, password):
-        secret_key = app.config['SECRET_KEY']
-        return password
 
     def __init__(self, username, password):
         self.username = username
-        self.password = self.SHA256_pass(password)
+        self.password = self.sha256_pass(password)
