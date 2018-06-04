@@ -17,12 +17,29 @@ class TestLogin(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
+    def tearDown(self):
+        self.truncate_test_db_table()
+
+    # Post signup before login
     def test_api_post_login(self):
+        self.app.post(
+            '/signup',
+            data=json.dumps({'username': 'name', 'password': 'password'}),
+            content_type='application/json'
+        )
         response = self.app.post('/login', data={
             'username': 'name',
             'password': 'password'
         }, follow_redirects=True)
         self.assertEqual(200, response.status_code)
+
+    def test_api_post_login_not_exist(self):
+        response = self.app.post('/login', data={
+            'username': 'name',
+            'password': 'password'
+        }, follow_redirects=True)
+        self.assertEqual(200, response.status_code)
+        self.assertIn(b'Not found user or pass', response.data)
 
     def test_api_post_login_failed(self):
         response = self.app.post('/login', data={
@@ -34,3 +51,8 @@ class TestLogin(unittest.TestCase):
     def test_api_post_logout(self):
         response = self.app.post('/logout')
         self.assertEqual(200, response.status_code)
+
+    def truncate_test_db_table(self):
+        with util_db.connect() as db:
+            db.execute('delete from Users')
+            db.execute('delete from Statuses')
