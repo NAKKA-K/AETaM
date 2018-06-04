@@ -13,10 +13,10 @@ class TestLogin(unittest.TestCase):
     @classmethod
     def set_test_db(cls):
         app.config['DATABASE'] = os.path.join(app.config['BASE_DIR'], 'test.sqlite3')
+        util_db.init()
 
     def setUp(self):
         self.app = app.test_client()
-        util_db.init()
 
     def tearDown(self):
         self.truncate_test_db_table()
@@ -24,14 +24,45 @@ class TestLogin(unittest.TestCase):
     def test_api_post_signup(self):
         response = self.api_post_signup({
             'username': 'name',
-            'password': 'pass'
+            'password': 'password'
         })
         self.assertEqual(200, response.status_code)
         res_json = response.get_json()
         # is valid response data?
-        if res_json['errors'] != [] or len(res_json['user']) != 2 or len(res_json['status']) != 7:
+        if res_json['errors'] != [] or len(res_json['user']) != 3 or len(res_json['status']) != 7:
             self.fail()
         self.assertEqual('name', res_json['user']['name'])
+
+    def test_api_signup_table(self):
+        posts = [
+            ['name', 'password'],
+            ['0123456789ABCDEF', 'password12345678']
+        ]
+        self.api_post_signup_table(posts, 200)
+
+    def test_api_signup_table_faild(self):
+        posts = [
+            ['0123456789ABCDEF0', 'password12345678'],
+            ['0123456789ABCDEF1', 'pass']
+        ]
+        self.api_post_signup_table(posts, 400)
+
+    def test_api_signup_exists_user(self):
+        self.assertEqual(
+            200,
+            self.api_post_signup({
+                'username': 'name',
+                'password': 'password'
+            }).status_code
+        )
+        self.assertEqual(
+            409,
+            self.api_post_signup({
+                'username': 'name',
+                'password': 'password'
+            }).status_code
+        )
+
 
     def api_post_signup(self, data):
         return self.app.post(
@@ -40,7 +71,17 @@ class TestLogin(unittest.TestCase):
             content_type='application/json'
         )
 
+    def api_post_signup_table(self, posts, status_code):
+        for post in posts:
+            self.assertEqual(
+                status_code,
+                self.api_post_signup({
+                    'username': post[0],
+                    'password': post[1]
+                }).status_code
+            )
+
     def truncate_test_db_table(self):
         with util_db.connect() as db:
-            db.execute('delete from users')
-            db.execute('delete from statuses')
+            db.execute('delete from Users')
+            db.execute('delete from Statuses')

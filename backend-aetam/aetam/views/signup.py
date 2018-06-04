@@ -1,64 +1,28 @@
 from flask.views import MethodView
 from flask import request
-from flask import session
-from flask import Response
-from flask import json
+from flask import jsonify
 from flask import g
-from aetam import app
+from aetam.models import User
+from aetam.models import Status
+from aetam.views.util import content_type
 
 class SignUpView(MethodView):
+    @content_type('application/json')
     def post(self):
-        if request.headers['Content-Type'] == 'application/json':
-            data = {"errors": []}
-            if request.json['username'] == "":
-                data['errors'].append('Invalid username')
-            if request.json['password'] == "":
-                data['errors'].append('Invalid password')
+        data = {"errors": []}
+        if not User.is_valid_username(request.json['username']):
+            data['errors'].append('Invalid username')
+        if not User.is_valid_password(request.json['password']):
+            data['errors'].append('Invalid password')
 
-            if data['errors'] == []:
-                user_id = self.insert_user(request.json['username'], request.json['password'])
-                data['status'] = self.select_status(user_id)
-                data['user'] = self.select_user(user_id)
-                return Response(
-                    status=200,
-                    response=json.dumps(data),
-                    mimetype='application/json'
-                )
-            return Response(
-                status=400,
-                response=json.dumps(data),
-                mimetype='application/json'
-            )
+        if data['errors']:
+            return jsonify(data), 400
 
-    def insert_user(self, username, password):
-        pass_sha = self.SHA256_pass(password)
-        cursor = g.db.cursor()
-        cursor.execute('insert into users (name, password) values (?, ?)', [username, pass_sha])
-        user_id = cursor.lastrowid
-        cursor.execute('insert into statuses values (?, ?, ?, ?, ?, ?, ?)', [user_id, "charname", 0, 0, 0, 0, 0])
-        g.db.commit()
-        return user_id
+        if User.get_exists_user(g.db, request.json['username']):
+            data['errors'].append('Exist username')
+            return jsonify(data), 409
 
-    def select_status(self, user_id):
-        status = g.db.execute('select * from statuses where user_id=(?)', [user_id]).fetchone()
-        return dict(
-            id=status[0],
-            name=status[1],
-            obesity=status[2],
-            serious=status[3],
-            hot=status[4],
-            strong=status[5],
-            kind=status[6]
-        )
+        data['user'] = User(request.json['username'], request.json['password']).insert_to(g.db)
+        data['status'] = Status(data['user']['id'], "charname", 0, 0, 0, 0, 0).insert_to(g.db)
+        return jsonify(data), 200
 
-    def select_user(self, user_id):
-        user = g.db.execute('select id, name from users where id=(?)', [user_id]).fetchone()
-        return dict(
-            id=user[0],
-            name=user[1]
-        )
-
-    # TODO: sha256
-    def SHA256_pass(self, password):
-        secret_key = app.config['SECRET_KEY']
-        return password
