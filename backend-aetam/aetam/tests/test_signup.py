@@ -83,5 +83,5 @@ class TestLogin(unittest.TestCase):
 
     def truncate_test_db_table(self):
         with util_db.connect() as db:
-            db.execute('delete from users')
-            db.execute('delete from statuses')
+            db.execute('delete from Users')
+            db.execute('delete from Statuses')
