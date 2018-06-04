@@ -1,6 +1,7 @@
 from aetam import app
 import re
 import os
+import base64
 
 class User(object):
     @classmethod
@@ -41,9 +42,13 @@ class User(object):
         return False
 
     def insert_to(self, db):
+        """
+        access_key = secrets.token_urlsafe(16)
+        Not supported secrets module.
+        Therefore the following implementations is substitude.
+        """
         cursor = db.cursor()
-        #access_key = secrets.token_hex(16)
-        access_key = os.urandom(16).hex()
+        access_key = base64.urlsafe_b64encode(os.urandom(16)).decode('ascii') # secure string
         cursor.execute(
             'insert into Users (name, password, access_key) values (?, ?, ?)',
             [self.username, self.password, access_key]
