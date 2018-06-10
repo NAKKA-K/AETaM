@@ -16,7 +16,9 @@ class User(object):
     @classmethod
     def select_from(cls, db, access_key):
         user = db.execute('select id, name, access_key from Users where access_key=(?)', [access_key]).fetchone()
-        return cls.convert_dic(user)
+        if user:
+            return cls.convert_dic(user)
+        return None
 
     @classmethod
     def is_valid_username(cls, username):
