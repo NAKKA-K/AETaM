@@ -26,10 +26,10 @@ class TestStatusApi(unittest.TestCase):
             '/signup',
             data=json.dumps({'username':'name', 'password':'password'}),
             content_type='application/json'
-        ).get_json()['user']['access_key']
+        ).get_json()['user']['ACCESS_KEY']
         response = self.app.get(
             '/statuses',
-            data=json.dumps({'access_key':access}),
+            data=json.dumps({'ACCESS_KEY':access}),
             content_type='application/json'
         )
         self.assertEqual(200, response.status_code)

@@ -7,7 +7,7 @@ class StatusApiView(MethodView):
     @content_type('application/json')
     def get(self):
         data = {"errors": []}
-        user = User.select_from(g.db, request.json['access_key'])
+        user = User.select_from(g.db, request.json['ACCESS_KEY'])
         if not user:
             data['errors'].append('Invalid access_key')
             return jsonify(data), 400

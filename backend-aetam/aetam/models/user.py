@@ -10,7 +10,7 @@ class User(object):
         return dict(
             id=user_array[0],
             name=user_array[1],
-            access_key=user_array[2]
+            ACCESS_KEY=user_array[2]
         )
 
     @classmethod
