@@ -49,7 +49,7 @@ class IpAETaM:
             if red > maxcolor[0]:
                 maxcolor[1] = 1
             self.dump.append(maxcolor[1])
-        
+
         elif not circles:
             print('円を検出できませんでした')
 
@@ -60,6 +60,6 @@ class IpAETaM:
         circles = cv2.HoughCircles(cups_edges, cv2.HOUGH_GRADIENT, dp=1.5, minDist=80, minRadius=80, maxRadius=140)
         cups_circles = np.copy(self.cups)
         return circles, cups_circles
-        
+
 #cups = cv2.imread('images/cups4.jpg')#画像読み込み
 #print(IpAETaM(cups).dump)
