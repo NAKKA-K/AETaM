@@ -66,7 +66,7 @@ class TestLogin(unittest.TestCase):
 
     def api_post_signup(self, data):
         return self.app.post(
-            '/signup',
+            '/api/signup',
             data=json.dumps(data),
             content_type='application/json'
         )
