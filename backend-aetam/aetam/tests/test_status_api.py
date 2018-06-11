@@ -23,12 +23,12 @@ class TestStatusApi(unittest.TestCase):
 
     def test_status_get_api(self):
         access = self.app.post(
-            '/signup',
+            '/api/signup',
             data=json.dumps({'username':'name', 'password':'password'}),
             content_type='application/json'
         ).get_json()['user']['ACCESS_KEY']
         response = self.app.get(
-            '/statuses',
+            '/api/statuses',
             data=json.dumps({'ACCESS_KEY':access}),
             content_type='application/json'
         )

@@ -23,7 +23,7 @@ class TestLogin(unittest.TestCase):
     # Post signup before login
     def test_api_post_login(self):
         self.app.post(
-            '/signup',
+            '/api/signup',
             data=json.dumps({'username': 'name', 'password': 'password'}),
             content_type='application/json'
         )
