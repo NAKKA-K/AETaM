@@ -6,8 +6,9 @@ Jinja2==2.10
 kiwisolver==1.0.1
 MarkupSafe==1.0
 matplotlib==2.2.2
+mecab-python3==0.7
 numpy==1.14.3
-opencv-python==3.4.0.14
+opencv-python==3.4.1.15
 PyMySQL==0.8.1
 pyparsing==2.2.0
 python-dateutil==2.7.3
