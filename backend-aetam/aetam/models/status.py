@@ -20,7 +20,7 @@ class Status(object):
 
     @classmethod
     def update_personal_from(cls, db, user_id, personality_json):
-        cursor.execute('update statuses set serious=(?), hot=(?), strong=(?), kind=(?) where user_id=(?)',
+        db.execute('update statuses set serious=(?), hot=(?), strong=(?), kind=(?) where user_id=(?)',
             [personality_json['serious'],
              personality_json['hot'],
              personality_json['strong'],
