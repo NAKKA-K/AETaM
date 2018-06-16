@@ -17,13 +17,11 @@ class WordApiView(MethodView):
             return jsonify(data), 400
 
         personality_json = LaAETaM(request.json['word']).execute()
-        update_status(user['id'], personality_json)
-        print(Status.select_from(g.db, user_id))
+        self.update_status(user['id'], personality_json)
         return jsonify(data), 200
 
     def update_status(self, user_id, personality_json):
         status = Status.select_from(g.db, user_id)
-        print(status)
         personality_json['serious'] += status['serious']
         personality_json['hot'] += status['hot']
         personality_json['strong'] += status['strong']
