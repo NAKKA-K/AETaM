@@ -29,9 +29,7 @@ class LaAETaM:
 
             result = result.next
 
-        self.jsonstring = json.dumps(self.seikaku)
-        print(self.jsonstring)
-        return self.jsonstring
+        return self.seikaku
 
 #a = LaAETaM("こんにちは")
 #a.execute()
