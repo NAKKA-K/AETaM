@@ -17,8 +17,11 @@ class LaAETaM:
 
     def execute(self):
         tagger = MeCab.Tagger('-Ochasen')
+        tagger.parse('')
         result = tagger.parseToNode(self.text)
+        print("\n", self.text)
         while result:
+            print("feature: ", result.feature, "\tsurface: ",  result.surface)
             for x in range(0,50):
                 if ((result.feature.split(',')[0])+(result.feature.split(',')[1])) == self.hinsi[x]:
                     for i in range(4,0,-1):

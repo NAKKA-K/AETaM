@@ -30,7 +30,7 @@ class TestStatusApi(unittest.TestCase):
         ).get_json()['user']['ACCESS_KEY']
         response = self.app.post(
             '/api/word',
-            data=json.dumps({'ACCESS_KEY':access, 'word': 'こんにちは'}),
+            data=json.dumps({'ACCESS_KEY':access, 'word': 'Rubyの構文は自由度が高い。'}),
             content_type='application/json'
         )
         self.assertEqual(200, response.status_code)
