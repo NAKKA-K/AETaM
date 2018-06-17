@@ -8,6 +8,8 @@ node_js:
 addons:
     apt:
         packages:
+            - python3-tk
+            - tk-dev
             - mecab
             - mecab-ipadic
             - mecab-utils
