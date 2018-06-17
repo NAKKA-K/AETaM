@@ -18,6 +18,7 @@ class LaAETaM:
     def execute(self):
         tagger = MeCab.Tagger('-Ochasen')
         tagger.parse('')
+        print(type(self.text))
         result = tagger.parseToNode(self.text)
         print("\n", self.text)
         while result:
