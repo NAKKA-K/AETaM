@@ -14,7 +14,18 @@ class Status(object):
     @classmethod
     def select_from(cls, db, user_id):
         status = db.execute('select * from statuses where user_id=(?)', [user_id]).fetchone()
+        if not status:
+            return None
         return cls.convert_dic(status)
+
+    @classmethod
+    def update_personal_from(cls, db, user_id, personality_json):
+        db.execute('update statuses set serious=(?), hot=(?), strong=(?), kind=(?) where user_id=(?)',
+            [personality_json['serious'],
+             personality_json['hot'],
+             personality_json['strong'],
+             personality_json['kind'],
+             user_id])
 
     def insert_to(self, db):
         cursor = db.cursor()

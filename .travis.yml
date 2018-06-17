@@ -5,6 +5,18 @@ python:
 node_js:
     - 10
 
+addons:
+    apt:
+        packages:
+            - python-tk
+            - python3-tk
+            - tk-dev
+            - mecab
+            - mecab-ipadic
+            - mecab-utils
+            - mecab-ipadic-utf8
+            - libmecab-dev
+
 install:
     - pip install --user -r backend-aetam/requirements.txt
     - cd frontend-aetam && make install && cd -
