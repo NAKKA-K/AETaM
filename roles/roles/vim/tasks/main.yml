@@ -1,0 +1,9 @@
+---
+- name: clone vim settings
+  command: git clone https://github.com/NAKKA-K/dotfiles.git ~/dotfiles
+
+- name: symlink vimrc
+  command: sh ~/dotfiles/vim_linlink.sh
+
+- name: echo source vimrc
+  command: echo "'source ~/.vimrc' in vim"

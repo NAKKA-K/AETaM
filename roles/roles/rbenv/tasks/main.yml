@@ -1,0 +1,46 @@
+---
+- name: clone rbenv
+  git:
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: /home/{{ ansible_ssh_user }}/.rbenv
+    update: False
+  become: False
+  register: rbenv
+
+- name: clone ruby-build
+  git:
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: /home/{{ ansible_ssh_user }}/.rbenv/plugins/ruby-build
+    update: False
+  become: False
+  register: ruby-build
+
+- name: settings rbenv
+  lineinfile:
+    path: /home/{{ ansible_ssh_user }}/.bashrc
+    state: present
+    create: True
+    line: "{{item}}"
+  with_items:  # insert line is reverse
+    - 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    - 'eval "$(rbenv init -)"'
+
+- name: install ruby with rbenv
+  shell: bash -lc "rbenv install {{ ruby_version }}"
+  become_user: "vagrant"
+  register: install_ruby
+
+- name: rbenv rehash
+  shell: bash -lc "rbenv rehash"
+  become_user: "vagrant"
+  when: install_ruby is changed
+
+- name: install rbenv dependences
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - libssl-dev
+    - libreadline-dev
+    - zlib1g-dev
+

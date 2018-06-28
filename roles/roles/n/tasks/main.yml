@@ -1,0 +1,15 @@
+---
+- git:
+    repo: https://github.com/tj/n.git
+    dest: /tmp/n
+    update: False
+  register: n
+
+- name: n make install
+  shell: cd /tmp/n/ && sudo make install && cd -
+  when: n is changed
+
+- name: install n(latest node & npm)
+  command: sudo n stable
+  when: n is changed
+
