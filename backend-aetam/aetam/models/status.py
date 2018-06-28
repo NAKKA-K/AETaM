@@ -1,6 +1,10 @@
-class Status(object):
+from aetam.models.model import Model
+
+class Status(Model):
     @classmethod
     def convert_dic(cls, status_array):
+        if not status_array:
+            return None
         return dict(
             user_id=status_array[0],
             name=status_array[1],
@@ -13,10 +17,8 @@ class Status(object):
 
     @classmethod
     def select_from(cls, db, user_id):
-        status = db.execute('select * from statuses where user_id=(?)', [user_id]).fetchone()
-        if not status:
-            return None
-        return cls.convert_dic(status)
+        status_array = db.execute('select * from statuses where user_id=(?)', [user_id]).fetchone()
+        return cls.convert_dic(status_array)
 
     @classmethod
     def update_personal_from(cls, db, user_id, personality_json):
@@ -28,9 +30,10 @@ class Status(object):
              user_id])
 
     def insert_to(self, db):
-        cursor = db.cursor()
-        cursor.execute('insert into statuses values (?, ?, ?, ?, ?, ?, ?)', [self.user_id, "charname", 0, 0, 0, 0, 0])
-        db.commit()
+        super().execute(
+            db,
+            'insert into statuses values (?, ?, ?, ?, ?, ?, ?)',
+            [self.user_id, "charname", 0, 0, 0, 0, 0])
         return self.select_from(db, self.user_id)
 
     def __init__(self, user_id, name, obesity, serious, hot, strong, kind):
