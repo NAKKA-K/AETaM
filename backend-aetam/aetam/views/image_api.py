@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 from flask.views import MethodView
 from flask import jsonify, request, g
 from aetam.models import User, Status
 from aetam.views.util import content_type
 from aetam.ai import IpAETaM
+from PIL import Image
+import io
 
 class ImageApiView(MethodView):
     @content_type('application/json')
@@ -16,15 +19,16 @@ class ImageApiView(MethodView):
         if data['errors']:
             return jsonify(data), 400
 
-        """
-        request.json['image'] is binary data
-        convert binary to image
-        send image to IpAETaM
-        data is json object
-        """
-        self.update_obesity(user.id, obesity)  # Update obesity of DB
+        img_read = request.json['image']
+        img_bin = io.BytesIO(img_read)
+        pil_img = Image.open(img_bin)
+        img = io.BytesIO()
+        pil_img.save(img,'PNG')
+        image = img.getvalue()
+        obesity = IpAETaM(image)
+        self.update_obesity(user.id, obesity)
         
         return jsonify(data), 200
 
-    def update_obesity(self, user_id, obesity):  # add obesity data
+    def update_obesity(self, user_id, obesity):
         pass
