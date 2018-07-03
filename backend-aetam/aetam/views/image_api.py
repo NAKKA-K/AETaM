@@ -27,4 +27,6 @@ class ImageApiView(MethodView):
         return jsonify(data), 200
 
     def update_obesity(self, user_id, obesity):  # add obesity data
-        pass
+        status = Status.select_from(g.db, user_id)
+        obesity += status['obesity']
+        status.update_obesity_from(g.db, user_id, obesity)

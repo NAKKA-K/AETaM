@@ -27,6 +27,12 @@ class Status(object):
              personality_json['kind'],
              user_id])
 
+    @classmethod
+    def update_obesity_from(cls, db, user_id, obesity):
+        db.execute('update statuses set obesity=(?), where user_id=(?)',
+            [obesity,
+             user_id])
+
     def insert_to(self, db):
         cursor = db.cursor()
         cursor.execute('insert into statuses values (?, ?, ?, ?, ?, ?, ?)', [self.user_id, "charname", 0, 0, 0, 0, 0])
