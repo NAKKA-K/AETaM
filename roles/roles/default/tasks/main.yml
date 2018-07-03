@@ -1,0 +1,19 @@
+---
+- name: install default package
+  apt: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - vim
+    - tree
+
+- name: create locale ja_JP.UTF-8
+  locale_gen:
+    name: ja_JP.UTF-8
+  register: locale
+
+- name: change locale
+  command: update-locale LANG=ja_JP.UTF-8;
+  when: locale is changed
+

@@ -1,0 +1,6 @@
+---
+- name: install react
+  npm: 
+    name: create-react-app
+    global: True
+
